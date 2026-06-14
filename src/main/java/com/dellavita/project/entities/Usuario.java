@@ -1,15 +1,18 @@
 package com.dellavita.project.entities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tb_usuario")
-public class Usuario {
-
+@MappedSuperclass
+public abstract class Usuario implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -89,7 +92,12 @@ public class Usuario {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + ", telefone=" + telefone + ", genero=" + genero + ", login="
+				+ login + ", senha=" + senha + ", cpf=" + cpf + "]";
+	}
 	
 
 }
