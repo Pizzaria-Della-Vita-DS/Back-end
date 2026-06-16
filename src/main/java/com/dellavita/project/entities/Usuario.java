@@ -1,38 +1,40 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
-import jakarta.persistence.Entity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Table;
 
 @MappedSuperclass
-public abstract class Usuario implements Serializable {
+public abstract class Usuario implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
+	private String email;
 	private String telefone;
-	private String genero;
-	private String login;
 	private String senha;
 	private String cpf;
 	
 	public Usuario() {
 	}
 	
-	public Usuario(Long id, String nome, String telefone, String genero, String login, String senha, String cpf) {
+	public Usuario(Long id, String nome, String email, String telefone, String senha, String cpf) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.email = email;
 		this.telefone = telefone;
-		this.genero = genero;
-		this.login = login;
 		this.senha = senha;
 		this.cpf = cpf;
 	}
@@ -53,28 +55,20 @@ public abstract class Usuario implements Serializable {
 		this.nome = nome;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	public String getTelefone() {
 		return telefone;
 	}
 
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
-	}
-
-	public String getGenero() {
-		return genero;
-	}
-
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	public String getSenha() {
@@ -95,9 +89,28 @@ public abstract class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", telefone=" + telefone + ", genero=" + genero + ", login="
-				+ login + ", senha=" + senha + ", cpf=" + cpf + "]";
+		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", telefone=" + telefone 
+				+ ", senha=" + senha + ", cpf=" + cpf + "]";
 	}
 	
+	@Override
+    public String getUsername() {
+        return this.email; // Spring Security usa getUsername()
+    }
 
+    @Override
+    public String getPassword() {
+        return this.senha; // deve estar hash com BCrypt
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+    }
+
+    @Override public boolean isAccountNonExpired()     { return true; }
+    @Override public boolean isAccountNonLocked()      { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled()               { return true; }
 }
+

@@ -19,7 +19,7 @@ public class Cliente extends Usuario implements Serializable {
 	
 	// Updated constructor to include all inherited fields + the specific Cliente field
 	public Cliente(Long id, String nome, String telefone, String genero, String login, String senha, String cpf, String endereco) {
-		super(id, nome, telefone, genero, login, senha, cpf);
+		super(id, nome, telefone, genero, senha, cpf);
 		this.endereco = endereco;
 	}
 
