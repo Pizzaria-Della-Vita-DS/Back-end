@@ -1,13 +1,18 @@
 package com.dellavita.project.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.dellavita.project.enums.Estado;
@@ -25,11 +30,21 @@ public class Pedido {
     private FormaPagamento forma_pagamento;
     private LocalDateTime data_hora;
     private Integer preco_total;
-    @ManyToOne
-    @JoinColumn(name = "cpf_cliente_fk")
-    private Cliente cliente;
 
-    
+
+    // é a relação de Cliente faz Pedido (N:1)
+	@ManyToOne
+	@JoinColumn(name = "cpf_cliente_fk")
+	private Cliente cliente;
+
+	// é a relação de Pedido tem Pizza (1:N)
+	@OneToMany(mappedBy = "pedido")
+	private Set<Pizza> pizzas = new HashSet<>();
+
+	// é da tabela de Funcionario Atende Pedido (M:N)
+	@ManyToMany(mappedBy = "pedidosAtendidos")
+	private Set<Funcionario> funcionarios = new HashSet<>();
+
 
     public Pedido() {
     }

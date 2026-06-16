@@ -5,10 +5,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.dellavita.project.enums.Tamanho;
+
 
 @Entity
 @Table(name = "tb_pizza")
@@ -19,9 +25,21 @@ public class Pizza {
     private long codigo;
     private Integer preco;
     private Tamanho tamanho;
-    @ManyToOne
-    @JoinColumn(name = "codigo_pedido_fk")
-    private Pedido pedido;
+
+
+    // é a relação de Pedido tem Pizza (N:1)
+	@ManyToOne
+	@JoinColumn(name = "codigo_pedido_fk")
+	private Pedido pedido;
+
+	// é a tabela de Pizza Possui Sabor (N:M)
+	@ManyToMany
+	@JoinTable(
+		name = "tb_possui_pizza_sabor",
+		joinColumns = @JoinColumn(name = "fk_Pizza_codigo"),
+		inverseJoinColumns = @JoinColumn(name = "fk_Sabor_nome")
+	)
+	private Set<Sabor> sabores = new HashSet<>();
 
 
     public Pizza() {

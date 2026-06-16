@@ -1,12 +1,16 @@
 package com.dellavita.project.entities;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,7 +23,36 @@ public class Funcionario extends Usuario {
     private String setor;
 
 
+
+    // é a tabela de Funcionario Gerencia Sabor (N:M)
+	@ManyToMany
+	@JoinTable(
+		name = "tb_gerencia",
+		joinColumns = @JoinColumn(name = "fk_Funcionario_fk_Usuario"),
+		inverseJoinColumns = @JoinColumn(name = "fk_Sabor_nome")
+	)
+	private Set<Sabor> saboresGerenciados = new HashSet<>();
+
+
+	// é a tabela de Funcionario Gerencia estoque Ingrediente (N:M)
+	@ManyToMany
+	@JoinTable(
+		name = "tb_gerencia_estoque",
+		joinColumns = @JoinColumn(name = "fk_Funcionario_fk_Usuario"),
+		inverseJoinColumns = @JoinColumn(name = "fk_Ingrediente_nome")
+	)
+	private Set<Ingrediente> ingredientesGerenciados = new HashSet<>();
+
     
+	// é a tabela de Funcionario Atende Pedido (N:M)
+	@ManyToMany
+	@JoinTable(
+		name = "tb_atende",
+		joinColumns = @JoinColumn(name = "fk_Funcionario_fk_Usuario"),
+		inverseJoinColumns = @JoinColumn(name = "fk_Pedido_codigo")
+	)
+	private Set<Pedido> pedidosAtendidos = new HashSet<>();
+
 
     public Funcionario(String rg, LocalDate data_nascimento, String email, String setor) {
         this.rg = rg;
