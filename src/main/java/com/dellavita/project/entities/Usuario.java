@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
@@ -18,33 +18,24 @@ public abstract class Usuario implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Column(length = 11, nullable = false, unique = true)
+    @CPF(message = "CPF inválido") // Validação automática do Spring Boot
+	private String cpf;
 	private String nome;
 	private String email;
 	private String telefone;
 	private String senha;
-	private String cpf;
 	
 	public Usuario() {
 	}
 	
-	public Usuario(Long id, String nome, String email, String telefone, String senha, String cpf) {
+	public Usuario(String cpf, String nome, String email, String telefone, String senha) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.telefone = telefone;
 		this.senha = senha;
 		this.cpf = cpf;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getNome() {
@@ -89,8 +80,8 @@ public abstract class Usuario implements Serializable, UserDetails {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", telefone=" + telefone 
-				+ ", senha=" + senha + ", cpf=" + cpf + "]";
+		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", telefone=" + telefone 
+				+ ", senha=" + senha;
 	}
 	
 	@Override

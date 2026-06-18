@@ -18,8 +18,8 @@ public class Cliente extends Usuario implements Serializable {
 	}
 	
 	// Updated constructor to include all inherited fields + the specific Cliente field
-	public Cliente(Long id, String nome, String telefone, String genero, String login, String senha, String cpf, String endereco) {
-		super(id, nome, telefone, genero, senha, cpf);
+	public Cliente(String cpf, String nome, String telefone, String genero, String login, String senha, String endereco) {
+		super(cpf, nome, telefone, genero, senha);
 		this.endereco = endereco;
 	}
 
@@ -34,6 +34,6 @@ public class Cliente extends Usuario implements Serializable {
 	@Override
 	public String toString() {
 		// You can now call getters from the superclass directly!
-		return "Cliente [id=" + getId() + ", nome=" + getNome() + ", endereco=" + endereco + "]";
+		return "Cliente [cpf=" + getCpf() + ", nome=" + getNome() + ", endereco=" + endereco + "]";
 	}
 }

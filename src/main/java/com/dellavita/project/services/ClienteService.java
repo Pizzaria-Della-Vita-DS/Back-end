@@ -41,8 +41,8 @@ public class ClienteService {
 	}
 	
 	@Transactional
-	public Cliente update(Long id, Cliente cliente) {
-		Cliente clienteNovo = clienteRepository.findById(id).orElseThrow();
+	public Cliente update(String cpf, Cliente cliente) {
+		Cliente clienteNovo = clienteRepository.findById(cpf).orElseThrow();
 		clienteNovo.setNome(cliente.getNome());
 		clienteNovo.setCpf(cliente.getCpf());
 		clienteNovo.setSenha(cliente.getSenha());
@@ -52,8 +52,8 @@ public class ClienteService {
 	}
 	
 	@Transactional
-	public void delete(Long id) {
-		clienteRepository.deleteById(id);
+	public void delete(String cpf) {
+		clienteRepository.deleteById(cpf);
 	}
 	
 }

@@ -12,33 +12,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dellavita.project.entities.Cliente;
-import com.dellavita.project.services.ClienteService;
+import com.dellavita.project.entities.Sabor;
+import com.dellavita.project.services.SaborService;
 
 @RestController
-@RequestMapping("/clientes")
-public class ClienteController {
+@RequestMapping(value="/sabores")
+public class SaborController {
 
 	@Autowired
-	private ClienteService clienteService;
+	private SaborService saborService;
+	
+	@GetMapping
+	public List<Sabor> listar(){
+		return saborService.listar();
+	}
 	
 	@PostMapping
-    public Cliente create(@RequestBody Cliente cliente) {
-        return clienteService.create(cliente);
-    }
-
-    @GetMapping
-    public List<Cliente> listAll() {
-        return clienteService.findAll();
+    public Sabor criar(@RequestBody Sabor sabor) {
+        return saborService.criar(sabor);
     }
 
     @PutMapping("/{id}")
-    public Cliente update(@PathVariable String cpf, @RequestBody Cliente cliente) {
-        return clienteService.update(cpf, cliente);
+    public Sabor atualizar(@PathVariable Long id, @RequestBody Sabor sabor) {
+        return saborService.atualizar(id, sabor);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable String cpf) {
-        clienteService.delete(cpf);
+    public void deletar(@PathVariable Long id) {
+        saborService.excluir(id);
     }
+	
 }
