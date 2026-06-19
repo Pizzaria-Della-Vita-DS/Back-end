@@ -3,7 +3,8 @@ package com.dellavita.project.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.dellavita.project.enums.Funcao;
@@ -26,6 +27,8 @@ public class Solicitacao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
+	private String cpf;
+	private String senha;	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Funcao funcao;
@@ -36,11 +39,14 @@ public class Solicitacao implements Serializable{
 	
 	public Solicitacao() {
 	}
-	
-	public Solicitacao(Long id, String nome, Funcao funcao, String email, LocalDate data) {
+
+	public Solicitacao(Long id, String nome, String cpf, String senha, Funcao funcao, String email,
+			LocalDate data) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.cpf = cpf;
+		this.senha = senha;
 		this.funcao = funcao;
 		this.email = email;
 		this.data = data;
@@ -60,6 +66,22 @@ public class Solicitacao implements Serializable{
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Funcao getFuncao() {
@@ -92,8 +114,10 @@ public class Solicitacao implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Solicitacao [id=" + id + ", nome=" + nome + ", email=" + email + ", data=" + data + "]";
+		return "Solicitacao [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", senha=" + senha +
+				", funcao=" + funcao + ", email=" + email + ", data=" + data + "]";
 	}
-
+	
+	
 	
 }

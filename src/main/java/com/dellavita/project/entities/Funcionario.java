@@ -23,8 +23,8 @@ public class Funcionario extends Usuario implements Serializable {
 	@Column(nullable = false)
 	private Status status;
 	
-	public Funcionario(String cpf, String nome, String email, String telefone,String senha, Funcao funcao, Status status) {
-		super(cpf, nome, email, telefone, senha);
+	public Funcionario(String cpf, String nome, String email, String senha, Funcao funcao, Status status) {
+		super(cpf, nome, email, senha);
 		this.funcao = funcao;
 		this.status = status;
 	}
@@ -49,10 +49,10 @@ public class Funcionario extends Usuario implements Serializable {
 		return serialVersionUID;
 	}
 
-	public Funcionario(Funcao funcao, Status status) {
-		super();
-		this.funcao = funcao;
-		this.status = status;
+	@Override
+	public String toString() {
+		return "Funcionario [funcao=" + funcao + ", status=" + status + "]";
 	}
+	
 	
 }

@@ -3,7 +3,8 @@ package com.dellavita.project.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.dellavita.project.enums.Estado;

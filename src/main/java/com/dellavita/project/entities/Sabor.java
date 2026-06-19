@@ -1,12 +1,13 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -20,15 +21,14 @@ public class Sabor implements Serializable{
 	private Long id;
 	private String name;
 	
-	@OneToMany
-	@JoinColumn(name ="id_ingredientes")
-	private Ingrediente ingredientes;
+    @OneToMany(mappedBy = "sabor", cascade = CascadeType.ALL)
+	private List<Ingrediente> ingredientes;
 	private Double preco;
 	
 	public Sabor() {
 	}	
 	
-	public Sabor(Long id, String name, Ingrediente ingredientes, Double preco) {
+	public Sabor(Long id, String name, List<Ingrediente> ingredientes, Double preco) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -52,11 +52,11 @@ public class Sabor implements Serializable{
 		this.name = name;
 	}
 
-	public Ingrediente getIngredientes() {
+	public List<Ingrediente> getIngredientes() {
 		return ingredientes;
 	}
 
-	public void setIngredientes(Ingrediente ingredientes) {
+	public void setIngredientes(List<Ingrediente> ingredientes) {
 		this.ingredientes = ingredientes;
 	}
 

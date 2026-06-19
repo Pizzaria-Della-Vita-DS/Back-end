@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,6 +16,7 @@ import jakarta.persistence.Table;
 public class Historico implements Serializable{
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@JsonFormat(pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate data;

@@ -13,35 +13,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dellavita.project.entities.Cliente;
-import com.dellavita.project.services.ClienteService;
+import com.dellavita.project.entities.Borda;
+import com.dellavita.project.services.BordaService;
 
 @RestController
-@RequestMapping("/clientes")
-public class ClienteController {
+@RequestMapping(value="/bordas")
+public class BordaController {
 
 	@Autowired
-	private ClienteService clienteService;
+	private BordaService bordaService;
+	
+	@GetMapping
+	public List<Borda> listar(){
+		return bordaService.listar();
+	}
 	
 	@PostMapping
-    public Cliente create(@RequestBody Cliente cliente) {
-        return clienteService.create(cliente);
-    }
-
-    @GetMapping
-    public List<Cliente> listAll() {
-        return clienteService.findAll();
+    public Borda criar(@RequestBody Borda borda) {
+        return bordaService.criar(borda);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable String cpf, @RequestBody Cliente cliente) {
-        return ResponseEntity.ok(clienteService.update(cpf, cliente));
+    public ResponseEntity<Borda> atualizar(@PathVariable Long id, @RequestBody Borda borda) {
+        return ResponseEntity.ok(bordaService.atualizar(id, borda));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String cpf) {
-        clienteService.delete(cpf);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        bordaService.excluir(id);
         return ResponseEntity.noContent().build();
     }
-	
+    
 }

@@ -12,15 +12,17 @@ public class Cliente extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String endereco;
+	private String telefone;
 	
 	public Cliente() {
 		super();
 	}
 	
 	// Updated constructor to include all inherited fields + the specific Cliente field
-	public Cliente(String cpf, String nome, String telefone, String genero, String login, String senha, String endereco) {
-		super(cpf, nome, telefone, genero, senha);
+	public Cliente(String cpf, String nome, String email, String senha, String endereco, String telefone ) {
+		super(cpf, nome, email, senha);
 		this.endereco = endereco;
+		this.telefone = telefone;
 	}
 
 	public String getEndereco() {
@@ -29,6 +31,14 @@ public class Cliente extends Usuario implements Serializable {
 
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+	
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,16 +28,20 @@ public class Ingrediente implements Serializable{
 	@Column(nullable = false)
 	private Categoria categoria;
 	private boolean disponivel;
+	@ManyToOne
+	@JoinColumn(name = "sabor_id")
+	private Sabor sabor;
 	
 	public Ingrediente() {
 	}
 	
-	public Ingrediente(Long id, String nome, Categoria categoria, boolean disponivel) {
+	public Ingrediente(Long id, String nome, Categoria categoria, boolean disponivel, Sabor sabor) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.categoria = categoria;
 		this.disponivel = disponivel;
+		this.sabor = sabor;
 	}
 
 	public Long getId() {
@@ -72,6 +78,15 @@ public class Ingrediente implements Serializable{
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+
+	public Sabor getSabor() {
+		return sabor;
+	}
+
+	public void setSabor(Sabor sabor) {
+		this.sabor = sabor;
 	}
 
 	@Override

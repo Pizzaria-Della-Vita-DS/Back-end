@@ -23,17 +23,15 @@ public abstract class Usuario implements Serializable, UserDetails {
 	private String cpf;
 	private String nome;
 	private String email;
-	private String telefone;
 	private String senha;
 	
 	public Usuario() {
 	}
 	
-	public Usuario(String cpf, String nome, String email, String telefone, String senha) {
+	public Usuario(String cpf, String nome, String email, String senha) {
 		super();
 		this.nome = nome;
 		this.email = email;
-		this.telefone = telefone;
 		this.senha = senha;
 		this.cpf = cpf;
 	}
@@ -52,14 +50,6 @@ public abstract class Usuario implements Serializable, UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
 	}
 
 	public String getSenha() {
@@ -80,8 +70,7 @@ public abstract class Usuario implements Serializable, UserDetails {
 
 	@Override
 	public String toString() {
-		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", telefone=" + telefone 
-				+ ", senha=" + senha;
+		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", senha=" + senha;
 	}
 	
 	@Override
