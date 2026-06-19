@@ -12,7 +12,7 @@ import com.dellavita.project.entities.Usuario;
 import com.dellavita.project.services.UsuarioService;
 
 @RestController
-@RequestMapping(value = "/usuarios")
+@RequestMapping(value = "/api/usuarios")
 public class UsuarioController {
 
 	@Autowired

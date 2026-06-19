@@ -1,63 +1,52 @@
 package com.dellavita.project.entities;
 
+import java.util.Collection; // AQUI
+import java.util.List; // AQUI
+
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority; // AQUI
+import org.springframework.security.core.authority.SimpleGrantedAuthority; // AQUI
+import org.springframework.security.core.userdetails.UserDetails; // AQUI
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tb_usuario")
-public class Usuario {
+
+@MappedSuperclass
+public class Usuario implements UserDetails { // AQUI
 
 	@Id
-<<<<<<< Updated upstream
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-=======
 	@Column(length = 11, nullable = false, unique = true)
 	@CPF(message = "CPF inválido")
 	private String cpf;
->>>>>>> Stashed changes
 	private String nome;
 	private String telefone;
 	private String genero;
 	private String login;
 	private String senha;
-<<<<<<< Updated upstream
-	private String cpf;
-=======
-	private String genero; // AQUI
-	private String telefone; // AQUI
->>>>>>> Stashed changes
 	
 	public Usuario() {
 	}
 	
-<<<<<<< Updated upstream
-	public Usuario(Long id, String nome, String telefone, String genero, String login, String senha, String cpf) {
+	public Usuario(String cpf, String nome, String login, String senha, String genero, String telefone) { // AQUI
 		super();
-		this.id = id;
-=======
-	public Usuario(String cpf, String nome, String email, String senha, String genero, String telefone) { // AQUI
-		super();
-		this.cpf = cpf; // AQUI
->>>>>>> Stashed changes
+		this.cpf = cpf;
 		this.nome = nome;
-		this.telefone = telefone;
-		this.genero = genero;
-		this.login = login;
+		this.login = login; // AQUI
 		this.senha = senha;
-		this.genero = genero; // AQUI
-		this.telefone = telefone; // AQUI
+		this.genero = genero;
+		this.telefone = telefone;
 	}
 
-	public Long getId() {
-		return id;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	public String getNome() {
@@ -100,44 +89,14 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-<<<<<<< Updated upstream
-	
-	
-
-}
-=======
-
-	public String getGenero() { // AQUI
-		return genero; // AQUI
-	} // AQUI
-
-	public void setGenero(String genero) { // AQUI
-		this.genero = genero; // AQUI
-	} // AQUI
-
-	public String getTelefone() { // AQUI
-		return telefone; // AQUI
-	} // AQUI
-
-	public void setTelefone(String telefone) { // AQUI
-		this.telefone = telefone; // AQUI
-	} // AQUI
-
 	@Override
 	public String toString() {
-		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", genero=" + genero + ", telefone=" + telefone + "]"; // AQUI
+		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", genero=" + genero + ", telefone=" + telefone + "]"; // AQUI
 	}
 	
 	@Override
 	public String getUsername() {
-		return this.email; 
+		return this.login; // AQUI
 	}
 
 	@Override
@@ -155,4 +114,3 @@ public class Usuario {
 	@Override public boolean isCredentialsNonExpired() { return true; }
 	@Override public boolean isEnabled()               { return true; }
 }
->>>>>>> Stashed changes
