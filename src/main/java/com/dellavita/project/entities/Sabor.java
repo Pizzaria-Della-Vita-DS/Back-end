@@ -19,7 +19,7 @@ public class Sabor implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
+	private String nome;
 	
     @OneToMany(mappedBy = "sabor", cascade = CascadeType.ALL)
 	private List<Ingrediente> ingredientes;
@@ -28,10 +28,10 @@ public class Sabor implements Serializable{
 	public Sabor() {
 	}	
 	
-	public Sabor(Long id, String name, List<Ingrediente> ingredientes, Double preco) {
+	public Sabor(Long id, String nome, List<Ingrediente> ingredientes, Double preco) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.nome = nome;
 		this.ingredientes = ingredientes;
 		this.preco = preco;
 	}
@@ -45,11 +45,11 @@ public class Sabor implements Serializable{
 	}
 
 	public String getName() {
-		return name;
+		return nome;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.nome = name;
 	}
 
 	public List<Ingrediente> getIngredientes() {
@@ -70,7 +70,7 @@ public class Sabor implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Sabores [id=" + id + ", name=" + name + ", preco=" + preco + "]";
+		return "Sabores [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
 	}
 	
 	
