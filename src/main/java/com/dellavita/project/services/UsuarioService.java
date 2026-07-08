@@ -21,8 +21,8 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public Usuario findById(Long id) {
-		return usuarioRepository.findById(id).get();
+	public Usuario findById(String cpf) {
+		return usuarioRepository.findById(cpf).get();
 	}
 	
 }

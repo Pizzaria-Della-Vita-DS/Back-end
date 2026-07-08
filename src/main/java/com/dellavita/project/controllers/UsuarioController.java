@@ -24,8 +24,8 @@ public class UsuarioController {
 	}
 	
 	@GetMapping(value="/{id}")
-	public Usuario findById(@PathVariable Long id) {
-		return usuarioService.findById(id);
+	public Usuario findById(@PathVariable String cpf) {
+		return usuarioService.findById(cpf);
 	}
 	
 	

@@ -1,9 +1,9 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
-import java.util.List; // AQUI
+import java.util.List;
 
-import com.dellavita.project.enums.Categoria;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,9 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany; // AQUI
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonIgnore; // AQUI
 
 @Entity
 @Table(name = "tb_ingrediente")
@@ -27,24 +26,19 @@ public class Ingrediente implements Serializable{
 	
 	private String nome;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Categoria categoria;
-	
 	private boolean disponivel;
 	
-	@JsonIgnore // AQUI: Evita loop infinito no JSON ao renderizar as duas pontas do N:M
-	@ManyToMany(mappedBy = "ingredientes") // AQUI
-	private List<Sabor> sabores; // AQUI
+	@JsonIgnore
+	@ManyToMany(mappedBy = "ingredientes")
+	private List<Sabor> sabores;
 	
 	public Ingrediente() {
 	}
 	
-	public Ingrediente(Long id, String nome, Categoria categoria, boolean disponivel) { // AQUI
+	public Ingrediente(Long id, String nome, boolean disponivel) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.categoria = categoria;
 		this.disponivel = disponivel;
 	}
 
@@ -62,14 +56,6 @@ public class Ingrediente implements Serializable{
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
 	}
 
 	public boolean isDisponivel() {

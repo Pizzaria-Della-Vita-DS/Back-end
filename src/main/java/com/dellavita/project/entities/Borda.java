@@ -17,16 +17,16 @@ public class Borda implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	private Double preco; // AQUI
+	private Double preco;
 	
 	public Borda() {
 	}
 	
-	public Borda(Long id, String nome, Double preco) { // AQUI
+	public Borda(Long id, String nome, Double preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.preco = preco; // AQUI
+		this.preco = preco;
 	}
 
 	public Long getId() {
@@ -45,13 +45,13 @@ public class Borda implements Serializable{
 		this.nome = nome;
 	}
 
-	public Double getPreco() { // AQUI
-		return preco; // AQUI
-	} // AQUI
+	public Double getPreco() {
+		return preco;
+	}
 
-	public void setPreco(Double preco) { // AQUI
-		this.preco = preco; // AQUI
-	} // AQUI
+	public void setPreco(Double preco) {
+		this.preco = preco;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -59,6 +59,6 @@ public class Borda implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Borda [id=" + id + ", nome=" + nome + ", preco=" + preco + "]"; // AQUI
+		return "Borda [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
 	}
 }

@@ -29,7 +29,6 @@ public class IngredienteService {
     public Ingrediente atualizar(Long id, Ingrediente ingrediente) {
         Ingrediente ingredienteNovo = ingredienteRepository.findById(id).orElseThrow();
         ingredienteNovo.setNome(ingrediente.getNome());
-        ingredienteNovo.setCategoria(ingrediente.getCategoria());
         ingredienteNovo.setDisponivel(ingrediente.isDisponivel());
         return ingredienteRepository.save(ingredienteNovo);
     }

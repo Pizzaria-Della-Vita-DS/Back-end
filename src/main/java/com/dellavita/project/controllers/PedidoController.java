@@ -29,10 +29,10 @@ public class PedidoController {
 		return pedidoService.listar();
 	}
 
-	@GetMapping(value = "/ativos") // AQUI
-	public List<Pedido> findAtivos() { // AQUI
-		return pedidoService.findAtivos(); // AQUI
-	} // AQUI
+	@GetMapping(value = "/ativos")
+	public List<Pedido> findAtivos() {
+		return pedidoService.findAtivos();
+	}
 
 	@PostMapping
 	public Pedido criar(@RequestBody Pedido pedido) {
@@ -49,7 +49,7 @@ public class PedidoController {
 		return ResponseEntity.ok(pedidoService.atualizarFormaPagamento(id, formaPagamento));
 	}
 
-	@GetMapping(value = "/historico") // AQUI: A rota que o React está a pedir
+	@GetMapping(value = "/historico")
 	public List<Pedido> findHistorico() {
 		return pedidoService.findHistorico();
 	}

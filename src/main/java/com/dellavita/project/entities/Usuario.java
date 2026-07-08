@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 
 
 @MappedSuperclass
-public class Usuario implements UserDetails { // AQUI
+public class Usuario implements UserDetails {
 
 	@Id
 	@Column(length = 11, nullable = false, unique = true)
@@ -35,7 +35,7 @@ public class Usuario implements UserDetails { // AQUI
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
-		this.login = login; // AQUI
+		this.login = login;
 		this.senha = senha;
 		this.genero = genero;
 		this.telefone = telefone;

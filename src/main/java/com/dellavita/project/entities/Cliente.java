@@ -12,14 +12,13 @@ public class Cliente extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String endereco;
-	// Atributo 'telefone' removido, pois agora é herdado de Usuario // AQUI
 	
 	public Cliente() {
 		super();
 	}
 	
-	public Cliente(String cpf, String nome, String email, String senha, String genero, String telefone, String endereco) { // AQUI
-		super(cpf, nome, email, senha, genero, telefone); // AQUI
+	public Cliente(String cpf, String nome, String email, String senha, String genero, String telefone, String endereco) {
+		super(cpf, nome, email, senha, genero, telefone);
 		this.endereco = endereco;
 	}
 

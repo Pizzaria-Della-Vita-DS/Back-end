@@ -1,7 +1,7 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate; // AQUI
+import java.time.LocalDate;
 
 import com.dellavita.project.enums.Funcao;
 import com.dellavita.project.enums.Status;
@@ -25,23 +25,23 @@ public class Funcionario extends Usuario implements Serializable {
 	@Column(nullable = false)
 	private Status status;
 	
-	private String rg; // AQUI
+	private String rg;
 	
-	private LocalDate data_nascimento; // AQUI
+	private LocalDate data_nascimento;
 	
-	private String setor; // AQUI
+	private String setor;
 	
-	public Funcionario() { // AQUI
-		super(); // AQUI
-	} // AQUI
+	public Funcionario() {
+		super();
+	}
 
-	public Funcionario(String cpf, String nome, String email, String senha, String genero, String telefone, Funcao funcao, Status status, String rg, LocalDate data_nascimento, String setor) { // AQUI
-		super(cpf, nome, email, senha, genero, telefone); // AQUI
+	public Funcionario(String cpf, String nome, String email, String senha, String genero, String telefone, Funcao funcao, Status status, String rg, LocalDate data_nascimento, String setor) {
+		super(cpf, nome, email, senha, genero, telefone);
 		this.funcao = funcao;
 		this.status = status;
-		this.rg = rg; // AQUI
-		this.data_nascimento = data_nascimento; // AQUI
-		this.setor = setor; // AQUI
+		this.rg = rg;
+		this.data_nascimento = data_nascimento;
+		this.setor = setor;
 	}
 
 	public Funcao getFuncao() {
@@ -60,13 +60,13 @@ public class Funcionario extends Usuario implements Serializable {
 		this.status = status;
 	}
 
-	public String getRg() { // AQUI
-		return rg; // AQUI
-	} // AQUI
+	public String getRg() {
+		return rg;
+	}
 
-	public void setRg(String rg) { // AQUI
-		this.rg = rg; // AQUI
-	} // AQUI
+	public void setRg(String rg) {
+		this.rg = rg;
+	}
 
 	public LocalDate getData_nascimento() { // AQUI
 		return data_nascimento; // AQUI
