@@ -43,14 +43,12 @@ public class FuncionarioService {
 
 	@Transactional
 	public Funcionario criar(Funcionario funcionario) {
-		  (início das validações de duplicidade trazidas da Versão 2)
 		if (funcionarioRepository.existsById(funcionario.getCpf()) || clienteRepository.existsById(funcionario.getCpf())) {
 			throw new RegistroDuplicadoException("Já existe um cadastro com este CPF.");
 		}
 		if (funcionarioRepository.existsByLogin(funcionario.getLogin()) || clienteRepository.existsByLogin(funcionario.getLogin())) {
 			throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
 		}
-		  (fim das validações de duplicidade)
 
 		// Ninguém pode se autopromover a Gerente pelo cadastro público.
 		if (funcionario.getFuncao() == Funcao.GERENTE) {
@@ -59,13 +57,12 @@ public class FuncionarioService {
 		// Todo cadastro nasce pendente, independente do que vier no payload.
 		funcionario.setStatus(Status.EM_VALIDAÇÃO);
 
-		  (criptografia trazida da Versão 2)
 		funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
 
 		return funcionarioRepository.save(funcionario);
 	}
 
-	@Transactional   (método inteiro de atualização trazido da Versão 2)
+	@Transactional
 	public Funcionario atualizar(String cpf, Funcionario dadosNovos) {  
 		Funcionario funcionarioExistente = funcionarioRepository.findById(cpf).orElseThrow();  
 		funcionarioExistente.setNome(dadosNovos.getNome());  
