@@ -4,19 +4,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;  
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dellavita.project.entities.Funcionario;
 import com.dellavita.project.enums.Funcao;
 import com.dellavita.project.enums.Status;
+import com.dellavita.project.repositories.ClienteRepository;  
 import com.dellavita.project.repositories.FuncionarioRepository;
+import com.dellavita.project.services.exceptions.RegistroDuplicadoException;  
 
 @Service
 public class FuncionarioService {
 
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
+
+	@Autowired  
+	private ClienteRepository clienteRepository;  
+
+	@Autowired  
+	private PasswordEncoder passwordEncoder;  
 
 	// Lista apenas quem já foi avaliado (ativo ou afastado); quem está
 	// pendente de aprovação só aparece na fila de solicitações.
@@ -34,14 +43,38 @@ public class FuncionarioService {
 
 	@Transactional
 	public Funcionario criar(Funcionario funcionario) {
+		  (início das validações de duplicidade trazidas da Versão 2)
+		if (funcionarioRepository.existsById(funcionario.getCpf()) || clienteRepository.existsById(funcionario.getCpf())) {
+			throw new RegistroDuplicadoException("Já existe um cadastro com este CPF.");
+		}
+		if (funcionarioRepository.existsByLogin(funcionario.getLogin()) || clienteRepository.existsByLogin(funcionario.getLogin())) {
+			throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
+		}
+		  (fim das validações de duplicidade)
+
 		// Ninguém pode se autopromover a Gerente pelo cadastro público.
 		if (funcionario.getFuncao() == Funcao.GERENTE) {
 			throw new IllegalArgumentException("Não é possível se cadastrar como Gerente.");
 		}
 		// Todo cadastro nasce pendente, independente do que vier no payload.
 		funcionario.setStatus(Status.EM_VALIDAÇÃO);
+
+		  (criptografia trazida da Versão 2)
+		funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
+
 		return funcionarioRepository.save(funcionario);
 	}
+
+	@Transactional   (método inteiro de atualização trazido da Versão 2)
+	public Funcionario atualizar(String cpf, Funcionario dadosNovos) {  
+		Funcionario funcionarioExistente = funcionarioRepository.findById(cpf).orElseThrow();  
+		funcionarioExistente.setNome(dadosNovos.getNome());  
+		funcionarioExistente.setTelefone(dadosNovos.getTelefone());  
+		funcionarioExistente.setGenero(dadosNovos.getGenero());  
+		funcionarioExistente.setFuncao(dadosNovos.getFuncao());  
+		funcionarioExistente.setSetor(dadosNovos.getSetor());  
+		return funcionarioRepository.save(funcionarioExistente);  
+	}  
 
 	@Transactional
 	public Funcionario aprovar(String cpf) {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dellavita.project.entities.Usuario;
+import com.dellavita.project.dto.UsuarioResponseDTO;
 import com.dellavita.project.services.UsuarioService;
 
 @RestController
@@ -17,16 +17,15 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@GetMapping
-	public List<Usuario> findAll(){
+	public List<UsuarioResponseDTO> findAll() {
 		return usuarioService.findAll();
 	}
-	
-	@GetMapping(value="/{id}")
-	public Usuario findById(@PathVariable String cpf) {
-		return usuarioService.findById(cpf);
+
+	@GetMapping(value = "/{cpf}")
+	public UsuarioResponseDTO findByCpf(@PathVariable String cpf) {
+		return usuarioService.findByCpf(cpf);
 	}
-	
-	
+
 }
