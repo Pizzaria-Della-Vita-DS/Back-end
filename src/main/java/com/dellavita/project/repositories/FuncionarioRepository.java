@@ -1,3 +1,4 @@
+
 package com.dellavita.project.repositories;
 
 import java.util.List;
@@ -10,10 +11,14 @@ import com.dellavita.project.enums.Status;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, String> {
 
-	List<Funcionario> findByStatus(Status status);
+    Optional<Funcionario> findByLogin(String login);
 
-	Optional<Funcionario> findByLogin(String login);
+    Optional<Funcionario> findByLoginIgnoreCase(String login);
 
-	boolean existsByLogin(String login);
+    boolean existsByLogin(String login);
+
+    boolean existsByLoginIgnoreCase(String login);
+
+    List<Funcionario> findByStatus(Status status);
 
 }

@@ -1,3 +1,4 @@
+
 package com.dellavita.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ClienteService {
         if (clienteRepository.existsById(cliente.getCpf()) || funcionarioRepository.existsById(cliente.getCpf())) {
             throw new RegistroDuplicadoException("Já existe um cadastro com este CPF.");
         }
-        if (clienteRepository.existsByLogin(cliente.getLogin()) || funcionarioRepository.existsByLogin(cliente.getLogin())) {
+        if (clienteRepository.existsByLoginIgnoreCase(cliente.getLogin()) || funcionarioRepository.existsByLoginIgnoreCase(cliente.getLogin())) {
             throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
         }
 

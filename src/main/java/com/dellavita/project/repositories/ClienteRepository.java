@@ -1,3 +1,4 @@
+
 package com.dellavita.project.repositories;
 
 import java.util.Optional;
@@ -10,6 +11,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, String> {
 
     Optional<Cliente> findByLogin(String login);
 
+    Optional<Cliente> findByLoginIgnoreCase(String login);
+
     boolean existsByLogin(String login);
+
+    boolean existsByLoginIgnoreCase(String login);
 
 }

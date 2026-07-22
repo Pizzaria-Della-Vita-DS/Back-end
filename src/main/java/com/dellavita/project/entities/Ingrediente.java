@@ -1,3 +1,4 @@
+
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Ingrediente implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(unique = true)
 	private String nome;
 	
 	private boolean disponivel;

@@ -1,17 +1,16 @@
+
 package com.dellavita.project.controllers.handlers;
 
 import java.time.Instant;
-import java.util.stream.Collectors;
 
-import jakarta.validation.ConstraintViolationException;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dellavita.project.services.exceptions.ContaNaoAprovadaException;
 import com.dellavita.project.services.exceptions.CredenciaisInvalidasException;
-import com.dellavita.project.services.exceptions.RecursoNaoEncontradoException;
 import com.dellavita.project.services.exceptions.RegistroDuplicadoException;
 
 @RestControllerAdvice
@@ -29,20 +28,25 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
     }
 
-    @ExceptionHandler(RecursoNaoEncontradoException.class)
-    public ResponseEntity<ErroPadrao> handleRecursoNaoEncontrado(RecursoNaoEncontradoException ex) {
-        ErroPadrao erro = new ErroPadrao(Instant.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+    @ExceptionHandler(ContaNaoAprovadaException.class)
+    public ResponseEntity<ErroPadrao> handleContaNaoAprovada(ContaNaoAprovadaException ex) {
+        ErroPadrao erro = new ErroPadrao(Instant.now(), HttpStatus.FORBIDDEN.value(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(erro);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErroPadrao> handleConstraintViolation(ConstraintViolationException ex) {
-        String mensagem = ex.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                .collect(Collectors.joining("; "));
-
-        ErroPadrao erro = new ErroPadrao(Instant.now(), HttpStatus.BAD_REQUEST.value(), mensagem);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErroPadrao> handleArgumentoInvalido(IllegalArgumentException ex) {
+        ErroPadrao erro = new ErroPadrao(Instant.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    // Rede de segurança contra concorrência: se dois pedidos passarem pela checagem
+    // de duplicidade do service ao mesmo tempo, a constraint UNIQUE do banco ainda
+    // barra o registro — aqui só traduzimos isso numa resposta amigável.
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErroPadrao> handleIntegridade(DataIntegrityViolationException ex) {
+        ErroPadrao erro = new ErroPadrao(Instant.now(), HttpStatus.CONFLICT.value(), "Já existe um registro com esses dados.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
 
     public static class ErroPadrao {
