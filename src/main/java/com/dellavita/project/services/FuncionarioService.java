@@ -27,9 +27,7 @@ public class FuncionarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    // Lista apenas quem já foi avaliado (ativo ou afastado); quem está
-    // pendente de aprovação só aparece na fila de solicitações.
+    
     @Transactional
     public List<Funcionario> listar() {
         return funcionarioRepository.findAll().stream()
@@ -63,11 +61,26 @@ public class FuncionarioService {
     @Transactional
     public Funcionario atualizar(String cpf, Funcionario dadosNovos) {
         Funcionario funcionarioExistente = funcionarioRepository.findById(cpf).orElseThrow();
+
+        if (dadosNovos.getLogin() != null && !dadosNovos.getLogin().isBlank()
+                && !dadosNovos.getLogin().equalsIgnoreCase(funcionarioExistente.getLogin())) {
+            if (funcionarioRepository.existsByLoginIgnoreCase(dadosNovos.getLogin())
+                    || clienteRepository.existsByLoginIgnoreCase(dadosNovos.getLogin())) {
+                throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
+            }
+            funcionarioExistente.setLogin(dadosNovos.getLogin());
+        }
+
         funcionarioExistente.setNome(dadosNovos.getNome());
         funcionarioExistente.setTelefone(dadosNovos.getTelefone());
         funcionarioExistente.setGenero(dadosNovos.getGenero());
         funcionarioExistente.setFuncao(dadosNovos.getFuncao());
         funcionarioExistente.setSetor(dadosNovos.getSetor());
+
+        if (dadosNovos.getSenha() != null && !dadosNovos.getSenha().isBlank()) {
+            funcionarioExistente.setSenha(passwordEncoder.encode(dadosNovos.getSenha()));
+        }
+
         return funcionarioRepository.save(funcionarioExistente);
     }
 

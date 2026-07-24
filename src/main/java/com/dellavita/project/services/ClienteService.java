@@ -39,10 +39,25 @@ public class ClienteService {
     @Transactional
     public Cliente atualizar(String cpf, Cliente dadosNovos) {
         Cliente clienteExistente = clienteRepository.findById(cpf).orElseThrow();
+
+        if (dadosNovos.getLogin() != null && !dadosNovos.getLogin().isBlank()
+                && !dadosNovos.getLogin().equalsIgnoreCase(clienteExistente.getLogin())) {
+            if (clienteRepository.existsByLoginIgnoreCase(dadosNovos.getLogin())
+                    || funcionarioRepository.existsByLoginIgnoreCase(dadosNovos.getLogin())) {
+                throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
+            }
+            clienteExistente.setLogin(dadosNovos.getLogin());
+        }
+
         clienteExistente.setNome(dadosNovos.getNome());
         clienteExistente.setTelefone(dadosNovos.getTelefone());
         clienteExistente.setGenero(dadosNovos.getGenero());
         clienteExistente.setEndereco(dadosNovos.getEndereco());
+
+        if (dadosNovos.getSenha() != null && !dadosNovos.getSenha().isBlank()) {
+            clienteExistente.setSenha(passwordEncoder.encode(dadosNovos.getSenha()));
+        }
+
         return clienteRepository.save(clienteExistente);
     }
 }
