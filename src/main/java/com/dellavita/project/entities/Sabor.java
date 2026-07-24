@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,12 +27,12 @@ public class Sabor implements Serializable{
 	@Column(unique = true)
 	private String nome; // AQUI
 	
-	@ManyToMany // AQUI
-	@JoinTable( // AQUI
-		name = "tb_possui", // AQUI: Resolve a tabela intermediária do DER automaticamente
-		joinColumns = @JoinColumn(name = "sabor_id"), // AQUI
-		inverseJoinColumns = @JoinColumn(name = "ingrediente_id") // AQUI
-	) // AQUI
+	@ManyToMany(fetch = FetchType.EAGER)  // era @ManyToMany (implicitamente LAZY)
+	@JoinTable(
+	    name = "tb_possui",
+	    joinColumns = @JoinColumn(name = "sabor_id"),
+	    inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+	)
 	private List<Ingrediente> ingredientes;
 	
 	private Double preco;
