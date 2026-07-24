@@ -52,6 +52,14 @@ public class FuncionarioController {
 		return ResponseEntity.ok(UsuarioResponseDTO.fromFuncionario(atualizado));
 	}
 
+	@PatchMapping("/{cpf}")
+	public ResponseEntity<UsuarioResponseDTO> atualizarParcialmente(
+			@PathVariable String cpf,
+			@RequestBody PerfilUpdateDTO funcionario) {
+		Funcionario atualizado = funcionarioService.atualizar(cpf, funcionario);
+		return ResponseEntity.ok(UsuarioResponseDTO.fromFuncionario(atualizado));
+	}
+
 	@PatchMapping("/{cpf}/aprovar")  
 	public ResponseEntity<UsuarioResponseDTO> aprovar(@PathVariable String cpf) {
 		Funcionario aprovado = funcionarioService.aprovar(cpf);

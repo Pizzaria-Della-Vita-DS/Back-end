@@ -1,5 +1,6 @@
 package com.dellavita.project.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -76,15 +77,40 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario atualizar(String cpf, PerfilUpdateDTO dadosNovos) {
-        validarPerfil(dadosNovos);
+        validarAtualizacaoInformada(dadosNovos);
         Funcionario funcionario = buscar(cpf);
-        validarLoginDisponivel(dadosNovos.getLogin(), funcionario.getLogin());
 
-        funcionario.setNome(dadosNovos.getNome().trim());
-        funcionario.setLogin(dadosNovos.getLogin().trim());
-        funcionario.setTelefone(dadosNovos.getTelefone().trim());
-        if (dadosNovos.getSenha() != null && !dadosNovos.getSenha().isBlank()) {
-            funcionario.setSenha(passwordEncoder.encode(dadosNovos.getSenha()));
+        if (dadosNovos.getNome() != null) {
+            funcionario.setNome(validarTextoObrigatorio(
+                    dadosNovos.getNome(),
+                    "O nome é obrigatório."));
+        }
+        if (dadosNovos.getLogin() != null) {
+            String login = validarEmail(dadosNovos.getLogin());
+            validarLoginDisponivel(login, funcionario.getLogin());
+            funcionario.setLogin(login);
+        }
+        if (dadosNovos.getTelefone() != null) {
+            funcionario.setTelefone(validarTextoObrigatorio(
+                    dadosNovos.getTelefone(),
+                    "O telefone é obrigatório."));
+        }
+        if (dadosNovos.getGenero() != null) {
+            funcionario.setGenero(validarTextoObrigatorio(
+                    dadosNovos.getGenero(),
+                    "O gênero é obrigatório."));
+        }
+        if (dadosNovos.getDataNascimento() != null) {
+            validarDataNascimento(dadosNovos.getDataNascimento());
+            funcionario.setData_nascimento(dadosNovos.getDataNascimento());
+        }
+        if (dadosNovos.getSetor() != null) {
+            funcionario.setSetor(validarTextoObrigatorio(
+                    dadosNovos.getSetor(),
+                    "O setor é obrigatório."));
+        }
+        if (dadosNovos.getSenha() != null) {
+            atualizarSenha(funcionario, dadosNovos.getSenha());
         }
         return funcionarioRepository.save(funcionario);
     }
@@ -111,30 +137,55 @@ public class FuncionarioService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Funcionário não encontrado."));
     }
 
-    private void validarPerfil(PerfilUpdateDTO dados) {
-        if (dados == null || dados.getNome() == null || dados.getNome().isBlank()) {
-            throw new IllegalArgumentException("O nome é obrigatório.");
-        }
-        if (dados.getLogin() == null || dados.getLogin().isBlank() || !dados.getLogin().contains("@")) {
-            throw new IllegalArgumentException("Informe um e-mail válido.");
-        }
-        if (dados.getTelefone() == null || dados.getTelefone().isBlank()) {
-            throw new IllegalArgumentException("O telefone é obrigatório.");
-        }
-        if (dados.getSenha() != null && !dados.getSenha().isBlank() && dados.getSenha().length() < 6) {
-            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+    private void validarAtualizacaoInformada(PerfilUpdateDTO dados) {
+        if (dados == null || (
+                dados.getNome() == null
+                && dados.getLogin() == null
+                && dados.getTelefone() == null
+                && dados.getSenha() == null
+                && dados.getGenero() == null
+                && dados.getDataNascimento() == null
+                && dados.getSetor() == null)) {
+            throw new IllegalArgumentException("Informe o campo que deseja atualizar.");
         }
     }
 
     private void validarLoginDisponivel(String novoLogin, String loginAtual) {
-        String loginNormalizado = novoLogin.trim();
-        if (loginNormalizado.equalsIgnoreCase(loginAtual)) {
+        if (novoLogin.equalsIgnoreCase(loginAtual)) {
             return;
         }
-        if (funcionarioRepository.existsByLoginIgnoreCase(loginNormalizado)
-                || clienteRepository.existsByLoginIgnoreCase(loginNormalizado)) {
+        if (funcionarioRepository.existsByLoginIgnoreCase(novoLogin)
+                || clienteRepository.existsByLoginIgnoreCase(novoLogin)) {
             throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
         }
+    }
+
+    private void atualizarSenha(Funcionario funcionario, String novaSenha) {
+        if (novaSenha.isBlank() || novaSenha.length() < 6) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+        }
+        funcionario.setSenha(passwordEncoder.encode(novaSenha));
+    }
+
+    private void validarDataNascimento(LocalDate dataNascimento) {
+        if (!dataNascimento.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("A data de nascimento deve estar no passado.");
+        }
+    }
+
+    private String validarEmail(String email) {
+        String normalizado = email.trim();
+        if (normalizado.isEmpty() || !normalizado.contains("@")) {
+            throw new IllegalArgumentException("Informe um e-mail válido.");
+        }
+        return normalizado;
+    }
+
+    private String validarTextoObrigatorio(String valor, String mensagem) {
+        if (valor.isBlank()) {
+            throw new IllegalArgumentException(mensagem);
+        }
+        return valor.trim();
     }
 
     private String normalizarCpf(String cpf) {

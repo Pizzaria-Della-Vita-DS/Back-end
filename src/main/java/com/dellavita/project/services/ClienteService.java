@@ -53,16 +53,34 @@ public class ClienteService {
 
     @Transactional
     public Cliente atualizar(String cpf, PerfilUpdateDTO dadosNovos) {
-        validarPerfil(dadosNovos);
+        validarAtualizacaoInformada(dadosNovos);
         Cliente cliente = clienteRepository.findById(cpf)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Cliente não encontrado."));
-        validarLoginDisponivel(dadosNovos.getLogin(), cliente.getLogin());
 
-        cliente.setNome(dadosNovos.getNome().trim());
-        cliente.setLogin(dadosNovos.getLogin().trim());
-        cliente.setTelefone(dadosNovos.getTelefone().trim());
-        cliente.setEndereco(normalizarOpcional(dadosNovos.getEndereco()));
-        atualizarSenha(cliente, dadosNovos.getSenha());
+        if (dadosNovos.getNome() != null) {
+            cliente.setNome(validarTextoObrigatorio(dadosNovos.getNome(), "O nome é obrigatório."));
+        }
+        if (dadosNovos.getLogin() != null) {
+            String login = validarEmail(dadosNovos.getLogin());
+            validarLoginDisponivel(login, cliente.getLogin());
+            cliente.setLogin(login);
+        }
+        if (dadosNovos.getTelefone() != null) {
+            cliente.setTelefone(validarTextoObrigatorio(
+                    dadosNovos.getTelefone(),
+                    "O telefone é obrigatório."));
+        }
+        if (dadosNovos.getEndereco() != null) {
+            cliente.setEndereco(normalizarOpcional(dadosNovos.getEndereco()));
+        }
+        if (dadosNovos.getGenero() != null) {
+            cliente.setGenero(validarTextoObrigatorio(
+                    dadosNovos.getGenero(),
+                    "O gênero é obrigatório."));
+        }
+        if (dadosNovos.getSenha() != null) {
+            atualizarSenha(cliente, dadosNovos.getSenha());
+        }
         return clienteRepository.save(cliente);
     }
 
@@ -73,36 +91,48 @@ public class ClienteService {
         clienteRepository.delete(cliente);
     }
 
-    private void validarPerfil(PerfilUpdateDTO dados) {
-        if (dados == null || dados.getNome() == null || dados.getNome().isBlank()) {
-            throw new IllegalArgumentException("O nome é obrigatório.");
-        }
-        if (dados.getLogin() == null || dados.getLogin().isBlank() || !dados.getLogin().contains("@")) {
-            throw new IllegalArgumentException("Informe um e-mail válido.");
-        }
-        if (dados.getTelefone() == null || dados.getTelefone().isBlank()) {
-            throw new IllegalArgumentException("O telefone é obrigatório.");
-        }
-        if (dados.getSenha() != null && !dados.getSenha().isBlank() && dados.getSenha().length() < 6) {
-            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+    private void validarAtualizacaoInformada(PerfilUpdateDTO dados) {
+        if (dados == null || (
+                dados.getNome() == null
+                && dados.getLogin() == null
+                && dados.getTelefone() == null
+                && dados.getEndereco() == null
+                && dados.getSenha() == null
+                && dados.getGenero() == null)) {
+            throw new IllegalArgumentException("Informe o campo que deseja atualizar.");
         }
     }
 
     private void validarLoginDisponivel(String novoLogin, String loginAtual) {
-        String loginNormalizado = novoLogin.trim();
-        if (loginNormalizado.equalsIgnoreCase(loginAtual)) {
+        if (novoLogin.equalsIgnoreCase(loginAtual)) {
             return;
         }
-        if (clienteRepository.existsByLoginIgnoreCase(loginNormalizado)
-                || funcionarioRepository.existsByLoginIgnoreCase(loginNormalizado)) {
+        if (clienteRepository.existsByLoginIgnoreCase(novoLogin)
+                || funcionarioRepository.existsByLoginIgnoreCase(novoLogin)) {
             throw new RegistroDuplicadoException("Já existe um cadastro com este e-mail.");
         }
     }
 
     private void atualizarSenha(Cliente cliente, String novaSenha) {
-        if (novaSenha != null && !novaSenha.isBlank()) {
-            cliente.setSenha(passwordEncoder.encode(novaSenha));
+        if (novaSenha.isBlank() || novaSenha.length() < 6) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
         }
+        cliente.setSenha(passwordEncoder.encode(novaSenha));
+    }
+
+    private String validarEmail(String email) {
+        String normalizado = email.trim();
+        if (normalizado.isEmpty() || !normalizado.contains("@")) {
+            throw new IllegalArgumentException("Informe um e-mail válido.");
+        }
+        return normalizado;
+    }
+
+    private String validarTextoObrigatorio(String valor, String mensagem) {
+        if (valor.isBlank()) {
+            throw new IllegalArgumentException(mensagem);
+        }
+        return valor.trim();
     }
 
     private String normalizarOpcional(String valor) {

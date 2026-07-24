@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,14 @@ public class ClienteController {
 
     @PutMapping("/{cpf}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable String cpf, @RequestBody PerfilUpdateDTO cliente) {
+        Cliente atualizado = clienteService.atualizar(cpf, cliente);
+        return ResponseEntity.ok(UsuarioResponseDTO.fromCliente(atualizado));
+    }
+
+    @PatchMapping("/{cpf}")
+    public ResponseEntity<UsuarioResponseDTO> atualizarParcialmente(
+            @PathVariable String cpf,
+            @RequestBody PerfilUpdateDTO cliente) {
         Cliente atualizado = clienteService.atualizar(cpf, cliente);
         return ResponseEntity.ok(UsuarioResponseDTO.fromCliente(atualizado));
     }

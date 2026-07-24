@@ -2,6 +2,7 @@ package com.dellavita.project.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,7 +47,7 @@ class PerfilServiceTests {
     }
 
     @Test
-    void deveEditarClienteComPedidosSemAlterarCpfGeneroOuSenha() {
+    void deveEditarClienteSemAlterarCamposNaoInformados() {
         Cliente cliente = new Cliente(
                 "52998224725",
                 "Nome Antigo",
@@ -71,7 +72,32 @@ class PerfilServiceTests {
     }
 
     @Test
-    void deveEditarGerenteSemPermitirAlteracaoDeFuncaoStatusOuDadosAdministrativos() {
+    void deveEditarSomenteOCampoInformadoDoCliente() {
+        Cliente cliente = new Cliente(
+                "52998224725",
+                "Nome Antigo",
+                "cliente@teste.dev",
+                "hash-atual",
+                "Outro",
+                "1111",
+                "Rua Antiga");
+        when(clienteRepository.findById(cliente.getCpf())).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(any(Cliente.class))).thenAnswer(invocacao -> invocacao.getArgument(0));
+
+        PerfilUpdateDTO dados = new PerfilUpdateDTO();
+        dados.setNome("Nome Novo");
+        Cliente atualizado = clienteService.atualizar(cliente.getCpf(), dados);
+
+        assertEquals("Nome Novo", atualizado.getNome());
+        assertEquals("cliente@teste.dev", atualizado.getLogin());
+        assertEquals("1111", atualizado.getTelefone());
+        assertEquals("Rua Antiga", atualizado.getEndereco());
+        assertEquals("Outro", atualizado.getGenero());
+        assertEquals("hash-atual", atualizado.getSenha());
+    }
+
+    @Test
+    void deveEditarGerenteSemAlterarCamposProtegidosOuNaoInformados() {
         Funcionario gerente = new Funcionario(
                 "93541134780",
                 "Gerente Antigo",
@@ -97,6 +123,55 @@ class PerfilServiceTests {
         assertEquals("123456789", atualizado.getRg());
         assertEquals(LocalDate.of(1990, 1, 1), atualizado.getData_nascimento());
         assertEquals("hash-atual", atualizado.getSenha());
+    }
+
+    @Test
+    void deveEditarDadosPessoaisDoFuncionarioSemAlterarCpfRgFuncaoOuStatus() {
+        Funcionario funcionario = new Funcionario(
+                "11144477735",
+                "Funcionário",
+                "funcionario@teste.dev",
+                "hash-atual",
+                "Outro",
+                "1111",
+                Funcao.ATENDENTE,
+                Status.ATIVO,
+                "123456789",
+                LocalDate.of(1990, 1, 1),
+                "Atendimento");
+        when(funcionarioRepository.findById(funcionario.getCpf())).thenReturn(Optional.of(funcionario));
+        when(funcionarioRepository.save(any(Funcionario.class))).thenAnswer(invocacao -> invocacao.getArgument(0));
+
+        PerfilUpdateDTO dados = new PerfilUpdateDTO();
+        dados.setGenero("Feminino");
+        dados.setDataNascimento(LocalDate.of(1992, 5, 20));
+        dados.setSetor("Caixa");
+        Funcionario atualizado = funcionarioService.atualizar(funcionario.getCpf(), dados);
+
+        assertEquals("11144477735", atualizado.getCpf());
+        assertEquals("123456789", atualizado.getRg());
+        assertSame(Funcao.ATENDENTE, atualizado.getFuncao());
+        assertSame(Status.ATIVO, atualizado.getStatus());
+        assertEquals("Feminino", atualizado.getGenero());
+        assertEquals(LocalDate.of(1992, 5, 20), atualizado.getData_nascimento());
+        assertEquals("Caixa", atualizado.getSetor());
+    }
+
+    @Test
+    void deveRejeitarAtualizacaoSemCampoOuDataDeNascimentoFutura() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clienteService.atualizar("52998224725", new PerfilUpdateDTO()));
+
+        Funcionario funcionario = new Funcionario();
+        funcionario.setCpf("11144477735");
+        when(funcionarioRepository.findById(funcionario.getCpf())).thenReturn(Optional.of(funcionario));
+
+        PerfilUpdateDTO dados = new PerfilUpdateDTO();
+        dados.setDataNascimento(LocalDate.now().plusDays(1));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> funcionarioService.atualizar(funcionario.getCpf(), dados));
     }
 
     @Test
