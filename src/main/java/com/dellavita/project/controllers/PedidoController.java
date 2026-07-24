@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dellavita.project.entities.Pedido;
+import com.dellavita.project.dto.PedidoRequestDTO;
+import com.dellavita.project.dto.PedidoResponseDTO;
 import com.dellavita.project.enums.Estado;
 import com.dellavita.project.enums.FormaPagamento;
 import com.dellavita.project.services.PedidoService;
@@ -21,36 +22,45 @@ import com.dellavita.project.services.PedidoService;
 @RequestMapping("/api/pedidos")
 public class PedidoController {
 
-	@Autowired
-	private PedidoService pedidoService;
+    @Autowired
+    private PedidoService pedidoService;
 
-	@GetMapping
-	public List<Pedido> listar(){
-		return pedidoService.listar();
-	}
+    @GetMapping
+    public List<PedidoResponseDTO> listar() {
+        return pedidoService.listar();
+    }
 
-	@GetMapping(value = "/ativos")
-	public List<Pedido> findAtivos() {
-		return pedidoService.findAtivos();
-	}
+    @GetMapping("/ativos")
+    public List<PedidoResponseDTO> findAtivos() {
+        return pedidoService.findAtivos();
+    }
 
-	@PostMapping
-	public Pedido criar(@RequestBody Pedido pedido) {
-		return pedidoService.criar(pedido);
-	}
+    @GetMapping("/historico")
+    public List<PedidoResponseDTO> findHistoricoGeral() {
+        return pedidoService.findHistoricoGeral();
+    }
 
-	@PatchMapping("/{id}/estado")
-	public ResponseEntity<Pedido> alternar(@PathVariable Long id, @RequestBody Estado estado){
-		return ResponseEntity.ok(pedidoService.atualizarEstado(id, estado));
-	}
+    @PostMapping
+    public PedidoResponseDTO criar(@RequestBody PedidoRequestDTO pedido) {
+        return pedidoService.criar(pedido);
+    }
 
-	@PatchMapping("/{id}/forma-pagamento")
-	public ResponseEntity<Pedido> alternarFormaPagamento(@PathVariable Long id, @RequestBody FormaPagamento formaPagamento){
-		return ResponseEntity.ok(pedidoService.atualizarFormaPagamento(id, formaPagamento));
-	}
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<PedidoResponseDTO> atualizarEstado(
+            @PathVariable Long id,
+            @RequestBody Estado estado) {
+        return ResponseEntity.ok(pedidoService.atualizarEstado(id, estado));
+    }
 
-	@GetMapping(value = "/historico")
-	public List<Pedido> findHistorico() {
-		return pedidoService.findHistorico();
-	}
+    @PatchMapping("/{id}/forma-pagamento")
+    public ResponseEntity<PedidoResponseDTO> atualizarFormaPagamento(
+            @PathVariable Long id,
+            @RequestBody FormaPagamento formaPagamento) {
+        return ResponseEntity.ok(pedidoService.atualizarFormaPagamento(id, formaPagamento));
+    }
+
+    @GetMapping("/historico/{clienteCpf}")
+    public List<PedidoResponseDTO> findHistoricoCliente(@PathVariable String clienteCpf) {
+        return pedidoService.findHistoricoCliente(clienteCpf);
+    }
 }

@@ -2,12 +2,18 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,15 +28,28 @@ public class Borda implements Serializable{
 	@Column(unique = true)
 	private String nome;
 	private Double preco;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "tb_borda_ingrediente",
+		joinColumns = @JoinColumn(name = "borda_id"),
+		inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+	)
+	private List<Ingrediente> ingredientes = new ArrayList<>();
 	
 	public Borda() {
 	}
 	
 	public Borda(Long id, String nome, Double preco) {
+		this(id, nome, preco, new ArrayList<>());
+	}
+
+	public Borda(Long id, String nome, Double preco, List<Ingrediente> ingredientes) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
+		this.ingredientes = ingredientes == null ? new ArrayList<>() : new ArrayList<>(ingredientes);
 	}
 
 	public Long getId() {
@@ -55,6 +74,18 @@ public class Borda implements Serializable{
 
 	public void setPreco(Double preco) {
 		this.preco = preco;
+	}
+
+	public List<Ingrediente> getIngredientes() {
+		return ingredientes;
+	}
+
+	public void setIngredientes(List<Ingrediente> ingredientes) {
+		this.ingredientes = ingredientes == null ? new ArrayList<>() : new ArrayList<>(ingredientes);
+	}
+
+	public boolean isDisponivel() {
+		return ingredientes == null || ingredientes.stream().allMatch(Ingrediente::isDisponivel);
 	}
 
 	public static long getSerialversionuid() {

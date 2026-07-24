@@ -33,6 +33,10 @@ public class Ingrediente implements Serializable{
 	@JsonIgnore
 	@ManyToMany(mappedBy = "ingredientes")
 	private List<Sabor> sabores;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "ingredientes")
+	private List<Borda> bordas;
 	
 	public Ingrediente() {
 	}
@@ -68,13 +72,21 @@ public class Ingrediente implements Serializable{
 		this.disponivel = disponivel;
 	}
 
-	public List<Sabor> getSabores() { // AQUI
-		return sabores; // AQUI
-	} // AQUI
+	public List<Sabor> getSabores() {
+		return sabores;
+	}
 
-	public void setSabores(List<Sabor> sabores) { // AQUI
-		this.sabores = sabores; // AQUI
-	} // AQUI
+	public void setSabores(List<Sabor> sabores) {
+		this.sabores = sabores;
+	}
+
+	public List<Borda> getBordas() {
+		return bordas;
+	}
+
+	public void setBordas(List<Borda> bordas) {
+		this.bordas = bordas;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

@@ -68,21 +68,21 @@ public class Funcionario extends Usuario implements Serializable {
 		this.rg = rg;
 	}
 
-	public LocalDate getData_nascimento() { // AQUI
-		return data_nascimento; // AQUI
-	} // AQUI
+	public LocalDate getData_nascimento() {
+		return data_nascimento;
+	}
 
-	public void setData_nascimento(LocalDate data_nascimento) { // AQUI
-		this.data_nascimento = data_nascimento; // AQUI
-	} // AQUI
+	public void setData_nascimento(LocalDate data_nascimento) {
+		this.data_nascimento = data_nascimento;
+	}
 
-	public String getSetor() { // AQUI
-		return setor; // AQUI
-	} // AQUI
+	public String getSetor() {
+		return setor;
+	}
 
-	public void setSetor(String setor) { // AQUI
-		this.setor = setor; // AQUI
-	} // AQUI
+	public void setSetor(String setor) {
+		this.setor = setor;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -90,6 +90,6 @@ public class Funcionario extends Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Funcionario [funcao=" + funcao + ", status=" + status + ", rg=" + rg + ", setor=" + setor + "]"; // AQUI
+		return "Funcionario [funcao=" + funcao + ", status=" + status + ", rg=" + rg + ", setor=" + setor + "]";
 	}
 }

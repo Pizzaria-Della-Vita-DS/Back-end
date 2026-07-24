@@ -21,9 +21,10 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.csrf(csrf -> csrf.disable()) // Desabilita proteção CSRF para APIs REST
+			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll() // AVISO: Libera todas as rotas para testarmos a integração inicial
+				// TODO: restringir as rotas antes de publicar o sistema.
+				.anyRequest().permitAll()
 			);
 		return http.build();
 	}

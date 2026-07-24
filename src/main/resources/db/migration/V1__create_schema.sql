@@ -1,10 +1,3 @@
-
-
--- ============================================================
--- V1: Schema inicial do banco Della Vita
--- ============================================================
-
--- Cliente e Funcionário: tabelas próprias, pois Usuario é @MappedSuperclass
 CREATE TABLE tb_cliente (
     cpf VARCHAR(11) NOT NULL,
     nome VARCHAR(255),
@@ -14,7 +7,7 @@ CREATE TABLE tb_cliente (
     telefone VARCHAR(255),
     endereco VARCHAR(255),
     PRIMARY KEY (cpf),
-    -- necessário pois tb_pedido referencia Cliente pelo campo "nome", não pelo cpf (ver observação abaixo)
+    -- O pedido referencia o cliente pelo nome, que precisa ser único.
     UNIQUE KEY uk_cliente_nome (nome)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -47,7 +40,6 @@ CREATE TABLE tb_sabor (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Relação N:N Sabor <-> Ingrediente
 CREATE TABLE tb_possui (
     sabor_id BIGINT NOT NULL,
     ingrediente_id BIGINT NOT NULL,

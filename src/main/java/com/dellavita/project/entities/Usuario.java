@@ -1,12 +1,12 @@
 package com.dellavita.project.entities;
 
-import java.util.Collection; // AQUI
-import java.util.List; // AQUI
+import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.core.GrantedAuthority; // AQUI
-import org.springframework.security.core.authority.SimpleGrantedAuthority; // AQUI
-import org.springframework.security.core.userdetails.UserDetails; // AQUI
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +31,7 @@ public class Usuario implements UserDetails {
 	public Usuario() {
 	}
 	
-	public Usuario(String cpf, String nome, String login, String senha, String genero, String telefone) { // AQUI
+	public Usuario(String cpf, String nome, String login, String senha, String genero, String telefone) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
@@ -91,12 +91,12 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", genero=" + genero + ", telefone=" + telefone + "]"; // AQUI
+		return "Usuario [cpf=" + cpf + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", genero=" + genero + ", telefone=" + telefone + "]";
 	}
 	
 	@Override
 	public String getUsername() {
-		return this.login; // AQUI
+		return this.login;
 	}
 
 	@Override

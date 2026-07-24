@@ -4,7 +4,7 @@ public class LoginRequestDTO {
 
     private String login;
     private String senha;
-    private String tipo; // "cliente" ou "funcionario"
+    private String tipo;
 
     public LoginRequestDTO() {
     }

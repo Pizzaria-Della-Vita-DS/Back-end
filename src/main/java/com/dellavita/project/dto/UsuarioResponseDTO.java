@@ -1,5 +1,7 @@
 package com.dellavita.project.dto;
 
+import java.time.LocalDate;
+
 import com.dellavita.project.entities.Cliente;
 import com.dellavita.project.entities.Funcionario;
 
@@ -10,15 +12,15 @@ public class UsuarioResponseDTO {
     private String login;
     private String genero;
     private String telefone;
-    private String tipo; // "cliente" ou "funcionario"
+    private String tipo;
 
-    // Campos específicos de Cliente
     private String endereco;
 
-    // Campos específicos de Funcionario
     private String funcao;
     private String status;
     private String setor;
+    private String rg;
+    private LocalDate dataNascimento;
 
     public UsuarioResponseDTO() {
     }
@@ -46,6 +48,8 @@ public class UsuarioResponseDTO {
         dto.funcao = funcionario.getFuncao() != null ? funcionario.getFuncao().name() : null;
         dto.status = funcionario.getStatus() != null ? funcionario.getStatus().name() : null;
         dto.setor = funcionario.getSetor();
+        dto.rg = funcionario.getRg();
+        dto.dataNascimento = funcionario.getData_nascimento();
         return dto;
     }
 
@@ -87,5 +91,13 @@ public class UsuarioResponseDTO {
 
     public String getSetor() {
         return setor;
+    }
+
+    public String getRg() {
+        return rg;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 }

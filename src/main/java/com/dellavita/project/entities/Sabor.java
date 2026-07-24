@@ -2,6 +2,7 @@
 package com.dellavita.project.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -10,9 +11,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn; // AQUI
-import jakarta.persistence.JoinTable; // AQUI
-import jakarta.persistence.ManyToMany; // AQUI
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,26 +26,26 @@ public class Sabor implements Serializable{
 	private Long id;
 	
 	@Column(unique = true)
-	private String nome; // AQUI
-	
-	@ManyToMany(fetch = FetchType.EAGER)  // era @ManyToMany (implicitamente LAZY)
+	private String nome;
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 	    name = "tb_possui",
 	    joinColumns = @JoinColumn(name = "sabor_id"),
 	    inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
 	)
-	private List<Ingrediente> ingredientes;
+	private List<Ingrediente> ingredientes = new ArrayList<>();
 	
 	private Double preco;
 	
 	public Sabor() {
 	}   
 	
-	public Sabor(Long id, String nome, List<Ingrediente> ingredientes, Double preco) { // AQUI
+	public Sabor(Long id, String nome, List<Ingrediente> ingredientes, Double preco) {
 		super();
 		this.id = id;
-		this.nome = nome; // AQUI
-		this.ingredientes = ingredientes;
+		this.nome = nome;
+		this.ingredientes = ingredientes == null ? new ArrayList<>() : new ArrayList<>(ingredientes);
 		this.preco = preco;
 	}
 
@@ -56,20 +57,20 @@ public class Sabor implements Serializable{
 		this.id = id;
 	}
 
-	public String getNome() { // AQUI
-		return nome; // AQUI
-	} // AQUI
+	public String getNome() {
+		return nome;
+	}
 
-	public void setNome(String nome) { // AQUI
-		this.nome = nome; // AQUI
-	} // AQUI
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
 	public List<Ingrediente> getIngredientes() {
 		return ingredientes;
 	}
 
 	public void setIngredientes(List<Ingrediente> ingredientes) {
-		this.ingredientes = ingredientes;
+		this.ingredientes = ingredientes == null ? new ArrayList<>() : new ArrayList<>(ingredientes);
 	}
 
 	public Double getPreco() {
@@ -80,8 +81,14 @@ public class Sabor implements Serializable{
 		this.preco = preco;
 	}
 
+	public boolean isDisponivel() {
+		return ingredientes != null
+				&& !ingredientes.isEmpty()
+				&& ingredientes.stream().allMatch(Ingrediente::isDisponivel);
+	}
+
 	@Override
 	public String toString() {
-		return "Sabores [id=" + id + ", nome=" + nome + ", preco=" + preco + "]"; // AQUI
+		return "Sabores [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
 	}	
 }

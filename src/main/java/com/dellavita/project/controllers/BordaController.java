@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dellavita.project.dto.BordaRequestDTO;
 import com.dellavita.project.entities.Borda;
 import com.dellavita.project.services.BordaService;
 
@@ -29,12 +30,12 @@ public class BordaController {
     }
 
     @PostMapping
-    public Borda criar(@RequestBody Borda borda) {
+    public Borda criar(@RequestBody BordaRequestDTO borda) {
         return bordaService.criar(borda);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Borda> atualizar(@PathVariable Long id, @RequestBody Borda borda) {
+    public ResponseEntity<Borda> atualizar(@PathVariable Long id, @RequestBody BordaRequestDTO borda) {
         return ResponseEntity.ok(bordaService.atualizar(id, borda));
     }
 

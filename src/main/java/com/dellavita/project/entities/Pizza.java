@@ -36,6 +36,10 @@ public class Pizza implements Serializable {
 	@JoinColumn(name = "pedido_id")
 	private Pedido pedido;
 
+	@ManyToOne
+	@JoinColumn(name = "borda_id")
+	private Borda borda;
+
 	public Pizza() {
 	}
 
@@ -86,6 +90,14 @@ public class Pizza implements Serializable {
 
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
+	}
+
+	public Borda getBorda() {
+		return borda;
+	}
+
+	public void setBorda(Borda borda) {
+		this.borda = borda;
 	}
 
 	@Override
