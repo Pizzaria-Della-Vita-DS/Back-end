@@ -1,7 +1,6 @@
 
 package com.dellavita.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,38 +18,43 @@ import com.dellavita.project.services.exceptions.CredenciaisInvalidasException;
 @Service
 public class AuthService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthService(
+            ClienteRepository clienteRepository,
+            FuncionarioRepository funcionarioRepository,
+            PasswordEncoder passwordEncoder) {
+        this.clienteRepository = clienteRepository;
+        this.funcionarioRepository = funcionarioRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional(readOnly = true)
     public UsuarioResponseDTO login(LoginRequestDTO dados) {
-        boolean isFuncionario = "funcionario".equalsIgnoreCase(dados.getTipo());
+        if (dados == null
+                || dados.getLogin() == null
+                || dados.getLogin().isBlank()
+                || dados.getSenha() == null
+                || dados.getSenha().isBlank()) {
+            throw new CredenciaisInvalidasException("E-mail ou senha incorretos.");
+        }
 
-        if (isFuncionario) {
-            Funcionario funcionario = funcionarioRepository.findByLoginIgnoreCase(dados.getLogin())
-                    .orElseThrow(() -> new CredenciaisInvalidasException("E-mail ou senha incorretos."));
+        String login = dados.getLogin().trim();
+        Cliente cliente = clienteRepository.findByLoginIgnoreCase(login).orElse(null);
+        if (cliente != null && passwordEncoder.matches(dados.getSenha(), cliente.getSenha())) {
+            return UsuarioResponseDTO.fromCliente(cliente);
+        }
 
-            if (!passwordEncoder.matches(dados.getSenha(), funcionario.getSenha())) {
-                throw new CredenciaisInvalidasException("E-mail ou senha incorretos.");
-            }
+        Funcionario funcionario = funcionarioRepository.findByLoginIgnoreCase(login).orElse(null);
+        if (funcionario != null && passwordEncoder.matches(dados.getSenha(), funcionario.getSenha())) {
             if (funcionario.getStatus() != Status.ATIVO) {
                 throw new ContaNaoAprovadaException("Cadastro pendente de aprovação ou inativo.");
             }
             return UsuarioResponseDTO.fromFuncionario(funcionario);
         }
 
-        Cliente cliente = clienteRepository.findByLoginIgnoreCase(dados.getLogin())
-                .orElseThrow(() -> new CredenciaisInvalidasException("E-mail ou senha incorretos."));
-
-        if (!passwordEncoder.matches(dados.getSenha(), cliente.getSenha())) {
-            throw new CredenciaisInvalidasException("E-mail ou senha incorretos.");
-        }
-        return UsuarioResponseDTO.fromCliente(cliente);
+        throw new CredenciaisInvalidasException("E-mail ou senha incorretos.");
     }
 }

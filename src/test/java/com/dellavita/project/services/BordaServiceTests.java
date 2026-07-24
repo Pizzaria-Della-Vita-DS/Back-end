@@ -3,6 +3,7 @@ package com.dellavita.project.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -59,6 +60,17 @@ class BordaServiceTests {
                 () -> bordaService.criar(novaBorda("Catupiry", -1.0, List.of())));
         assertThrows(IllegalArgumentException.class,
                 () -> bordaService.criar(novaBorda("Catupiry", null, List.of())));
+    }
+
+    @Test
+    void devePermitirBordaSemIngredientes() {
+        when(bordaRepository.save(any(Borda.class)))
+                .thenAnswer(invocacao -> invocacao.getArgument(0));
+
+        Borda criada = bordaService.criar(novaBorda("Catupiry", 5.0, List.of()));
+
+        assertTrue(criada.getIngredientes().isEmpty());
+        assertTrue(criada.isDisponivel());
     }
 
     @Test

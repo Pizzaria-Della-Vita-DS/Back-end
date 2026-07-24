@@ -82,9 +82,7 @@ public class Sabor implements Serializable{
 	}
 
 	public boolean isDisponivel() {
-		return ingredientes != null
-				&& !ingredientes.isEmpty()
-				&& ingredientes.stream().allMatch(Ingrediente::isDisponivel);
+		return ingredientes == null || ingredientes.stream().allMatch(Ingrediente::isDisponivel);
 	}
 
 	@Override

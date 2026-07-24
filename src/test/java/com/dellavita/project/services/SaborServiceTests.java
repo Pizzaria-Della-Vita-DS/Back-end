@@ -3,6 +3,7 @@ package com.dellavita.project.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -49,13 +50,22 @@ class SaborServiceTests {
     }
 
     @Test
-    void deveExigirNomePrecoEIngrediente() {
+    void deveExigirNomeEPreco() {
         assertThrows(IllegalArgumentException.class,
                 () -> saborService.criar(novoSabor(" ", 30.0, List.of(1L))));
         assertThrows(IllegalArgumentException.class,
                 () -> saborService.criar(novoSabor("Calabresa", -1.0, List.of(1L))));
-        assertThrows(IllegalArgumentException.class,
-                () -> saborService.criar(novoSabor("Calabresa", 30.0, List.of())));
+    }
+
+    @Test
+    void devePermitirSaborSemIngredientes() {
+        when(saborRepository.save(any(Sabor.class)))
+                .thenAnswer(invocacao -> invocacao.getArgument(0));
+
+        Sabor criado = saborService.criar(novoSabor("Calabresa", 30.0, List.of()));
+
+        assertTrue(criado.getIngredientes().isEmpty());
+        assertTrue(criado.isDisponivel());
     }
 
     @Test

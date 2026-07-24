@@ -80,14 +80,12 @@ public class SaborService {
         if (dados.getPreco() == null || !Double.isFinite(dados.getPreco()) || dados.getPreco() < 0) {
             throw new IllegalArgumentException("O preço do sabor deve ser maior ou igual a zero.");
         }
-        if (dados.getIngredientesIds() == null
-                || dados.getIngredientesIds().stream().filter(Objects::nonNull).findAny().isEmpty()) {
-            throw new IllegalArgumentException("Selecione ao menos um ingrediente para o sabor.");
-        }
     }
 
     private List<Ingrediente> buscarIngredientes(List<Long> ids) {
-        List<Long> idsDistintos = ids.stream().filter(Objects::nonNull).distinct().toList();
+        List<Long> idsDistintos = ids == null
+                ? List.of()
+                : ids.stream().filter(Objects::nonNull).distinct().toList();
         List<Ingrediente> ingredientes = ingredienteRepository.findAllById(idsDistintos);
         if (ingredientes.size() != idsDistintos.size()) {
             throw new IllegalArgumentException("Um ou mais ingredientes do sabor não foram encontrados.");

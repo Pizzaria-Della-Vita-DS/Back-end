@@ -4,7 +4,6 @@ public class LoginRequestDTO {
 
     private String login;
     private String senha;
-    private String tipo;
 
     public LoginRequestDTO() {
     }
@@ -25,11 +24,4 @@ public class LoginRequestDTO {
         this.senha = senha;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }
